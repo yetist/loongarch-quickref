@@ -1,0 +1,467 @@
+@page {
+  size: A4;
+  margin: 17mm 16mm 16mm;
+
+  @top-right {
+    content: "龙芯架构指令速查表";
+    font-family: "Source Han Sans CN", sans-serif;
+    font-size: 8pt;
+    color: #777;
+  }
+
+  @bottom-center {
+    content: counter(page) " / " counter(pages);
+    font-family: "Source Han Sans CN", sans-serif;
+    font-size: 8.4pt;
+    color: #666;
+  }
+}
+
+@page:first {
+  @top-right { content: none; }
+  @bottom-center { content: none; }
+}
+
+html,
+body {
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  font-family: "Source Han Serif CN", "Noto Serif CJK SC", serif;
+  font-size: 10.2pt;
+  line-height: 1.7;
+  color: #111;
+  -webkit-print-color-adjust: exact;
+  print-color-adjust: exact;
+}
+
+code,
+pre,
+.mnemonic,
+.operands,
+.equation,
+.bit-table,
+.formula {
+  font-family: "DejaVu Sans Mono", "Source Han Sans CN", monospace;
+}
+
+/* ---------- 封面 ---------- */
+
+.cover {
+  height: 252mm;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  break-after: page;
+}
+
+.cover-kicker {
+  padding-top: 8mm;
+  font-family: "Source Han Sans CN", sans-serif;
+  font-size: 9.5pt;
+  letter-spacing: 0.22em;
+  color: #777;
+}
+
+.cover-main {
+  margin-top: -18mm;
+}
+
+.cover-title {
+  margin: 0;
+  font-family: "Source Han Serif CN", "Nimbus Roman", serif;
+  font-size: 38pt;
+  font-weight: 700;
+  line-height: 1.28;
+  letter-spacing: 0.04em;
+}
+
+.cover-subtitle {
+  margin-top: 5mm;
+  font-family: "Source Han Sans CN", sans-serif;
+  font-size: 12.5pt;
+  letter-spacing: 0.08em;
+  color: #555;
+}
+
+.cover-rule {
+  width: 58mm;
+  margin: 12mm 0 0;
+  border-top: 2.2pt solid #111;
+}
+
+.cover-meta {
+  font-family: "Source Han Sans CN", sans-serif;
+  font-size: 10pt;
+  line-height: 1.9;
+  color: #333;
+}
+
+.cover-meta strong {
+  font-weight: 600;
+}
+
+.cover-bottom {
+  padding-bottom: 4mm;
+  font-family: "Source Han Sans CN", sans-serif;
+  font-size: 9pt;
+  color: #777;
+}
+
+/* ---------- 目录 ---------- */
+
+.toc {
+  break-after: page;
+}
+
+.toc-title {
+  margin: 0 0 4mm;
+  padding-bottom: 2mm;
+  border-bottom: 1.6pt solid #111;
+  font-family: "Source Han Sans CN", sans-serif;
+  font-size: 18pt;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+}
+
+.toc-columns {
+  column-count: 2;
+  column-gap: 11mm;
+  font-size: 8.6pt;
+  line-height: 1.42;
+}
+
+.toc-group {
+  margin: 0 0 3mm;
+}
+
+.toc-letter {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  margin: 2mm 0 0.8mm;
+  padding-bottom: 0.7mm;
+  border-bottom: 0.8pt solid #333;
+  font-family: "Source Han Sans CN", sans-serif;
+  break-after: avoid;
+}
+
+.toc-letter-name {
+  width: 7mm;
+  font-size: 13pt;
+  font-weight: 700;
+}
+
+.toc-letter-title {
+  flex: 1;
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+  font-size: 9.5pt;
+  font-weight: 600;
+}
+
+.toc-entry {
+  display: flex;
+  align-items: baseline;
+  color: #111;
+  text-decoration: none;
+  break-inside: avoid;
+}
+
+.toc-name {
+  white-space: nowrap;
+}
+
+.toc-dots {
+  flex: 1;
+  min-width: 3mm;
+  margin: 0 1.6mm;
+  border-bottom: 0.55pt dotted #aaa;
+}
+
+.toc-page {
+  width: 8mm;
+  text-align: right;
+  font-family: "DejaVu Sans Mono", monospace;
+  font-size: 8.3pt;
+  color: #333;
+}
+
+/* ---------- 章 ---------- */
+
+.chapter {
+  break-before: auto;
+}
+
+.chapter-title {
+  margin: 0 0 3mm;
+  padding-bottom: 2mm;
+  border-bottom: 1.6pt solid #111;
+  font-family: "Source Han Sans CN", sans-serif;
+  font-size: 17pt;
+  font-weight: 700;
+  letter-spacing: 0.02em;
+  line-height: 1.35;
+  break-after: avoid;
+}
+
+.chapter-note {
+  margin: 0 0 2mm;
+  padding: 2.2mm 0;
+  font-size: 9.2pt;
+  line-height: 1.65;
+  color: #555;
+}
+
+/* ---------- 条目 ---------- */
+
+.section-note {
+  margin: 4mm 0 1mm;
+  padding: 2.4mm 3mm;
+  border-left: 3pt solid #999;
+  background: #f7f7f7;
+  font-size: 9.1pt;
+  line-height: 1.65;
+  color: #333;
+  break-inside: avoid;
+}
+
+.section-note-title {
+  margin-bottom: 1mm;
+  font-family: "Source Han Sans CN", sans-serif;
+  font-size: 9.5pt;
+  font-weight: 700;
+}
+
+.section-note p {
+  margin: 0 0 1.2mm;
+}
+
+.section-note ul {
+  margin: 0;
+  padding-left: 5mm;
+}
+
+.section-note li {
+  margin: 0.35mm 0;
+}
+
+.section-note code {
+  background: #eaeaea;
+}
+
+.insn {
+  padding: 4mm 0 5mm;
+  border-bottom: 0.6pt solid #999;
+  break-inside: avoid;
+}
+
+.insn:last-child {
+  border-bottom: none;
+}
+
+.insn-head {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 4mm;
+  flex-wrap: wrap;
+}
+
+.insn-title {
+  min-width: 45mm;
+  margin: 0;
+  font: inherit;
+  font-weight: normal;
+  line-height: 1.1;
+}
+
+.mnemonic {
+  font-family: "Source Han Serif CN", "Nimbus Roman", serif;
+  font-size: 21pt;
+  font-weight: 600;
+  letter-spacing: 0.01em;
+  line-height: 1.1;
+}
+
+.operands {
+  margin-left: 2.2mm;
+  font-size: 11pt;
+  color: #222;
+}
+
+.equation {
+  margin-left: auto;
+  max-width: 70%;
+  font-size: 7.8pt;
+  line-height: 1.45;
+  text-align: right;
+  color: #111;
+}
+
+.equation code {
+  font-size: inherit;
+  background: none;
+  padding: 0;
+}
+
+.insn-meta {
+  margin-top: 0.6mm;
+  font-size: 9.5pt;
+  line-height: 1.5;
+  color: #333;
+}
+
+.cn-name {
+  font-weight: 600;
+}
+
+.en-name {
+  color: #444;
+}
+
+.sep {
+  margin: 0 1.4mm;
+  color: #999;
+}
+
+.tag {
+  font-family: "Source Han Sans CN", sans-serif;
+  font-size: 9pt;
+  color: #333;
+}
+
+.description {
+  margin: 2.2mm 0 0;
+  font-size: 10.1pt;
+  line-height: 1.7;
+  text-align: justify;
+  text-justify: inter-ideograph;
+}
+
+.description code {
+  font-size: 0.88em;
+  background: #f2f2f2;
+  padding: 0.05em 0.22em;
+  border-radius: 1.5px;
+}
+
+.note {
+  margin: 2.2mm 0 0;
+  padding: 1.5mm 2.5mm;
+  border-left: 2pt solid #999;
+  background: #f6f6f6;
+  font-size: 9pt;
+  line-height: 1.65;
+  color: #333;
+}
+
+.note code {
+  background: #eaeaea;
+}
+
+.detail {
+  display: grid;
+  grid-template-columns: 19mm 1fr;
+  column-gap: 3mm;
+  row-gap: 1.8mm;
+  align-items: start;
+  margin-top: 3mm;
+}
+
+.detail-label {
+  padding-top: 1.1mm;
+  font-family: "Source Han Sans CN", sans-serif;
+  font-size: 8pt;
+  letter-spacing: 0.06em;
+  color: #666;
+  text-align: right;
+}
+
+.encoding {
+  min-width: 0;
+}
+
+.bit-table {
+  width: 100%;
+  table-layout: fixed;
+  border-collapse: collapse;
+  margin: 0;
+}
+
+.bit-table col {
+  width: 3.125%;
+}
+
+.bit-table th {
+  border: none;
+  padding: 0 0.6mm 0.9mm;
+  font-family: "DejaVu Sans Mono", monospace;
+  font-size: 6.9pt;
+  font-weight: normal;
+  line-height: 1;
+  color: #222;
+  vertical-align: bottom;
+}
+
+.bit-table th .hi {
+  float: left;
+}
+
+.bit-table th .lo {
+  float: right;
+}
+
+.bit-table td {
+  border: 0.7pt solid #222;
+  height: 9.5mm;
+  padding: 0;
+  text-align: center;
+  vertical-align: middle;
+  font-family: "DejaVu Sans Mono", monospace;
+  font-size: 8.6pt;
+  line-height: 1;
+}
+
+.bit-table td.fixed {
+  background: #f0f0f0;
+}
+
+.bit-table td.reg,
+.bit-table td.imm,
+.bit-table td.shift {
+  background: #fff;
+}
+
+.detail pre {
+  margin: 0;
+  padding: 1.4mm 2.4mm;
+  border-left: 2pt solid #c8c8c8;
+  background: #f8f8f8;
+  font-family: "DejaVu Sans Mono", monospace;
+  font-size: 8.2pt;
+  line-height: 1.55;
+  white-space: pre-wrap;
+  color: #111;
+}
+
+.detail pre .comment {
+  color: #777;
+}
+
+.formula {
+  padding-top: 0.4mm;
+  font-size: 8.2pt;
+  line-height: 1.5;
+  color: #333;
+  overflow-wrap: anywhere;
+}
+
+.formula code {
+  background: none;
+  padding: 0;
+  font-size: inherit;
+}
