@@ -1,0 +1,98 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+    tags: ["v*"]
+  pull_request:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: ci-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+          cache: pip
+          cache-dependency-path: requirements.txt
+
+      - name: Install system dependencies
+        env:
+          DEBIAN_FRONTEND: noninteractive
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y --no-install-recommends \
+            binutils-loongarch64-linux-gnu \
+            qpdf \
+            poppler-utils \
+            fonts-noto-cjk \
+            fonts-dejavu-core
+
+      - name: Install Python dependencies
+        run: |
+          python3 -m venv .venv
+          .venv/bin/pip install -r requirements.txt
+
+      - name: Validate content and encodings
+        run: make check
+
+      - name: Build PDF
+        env:
+          CHROME: google-chrome
+        run: make pdf
+
+      - name: Verify PDF
+        run: |
+          pdfinfo loongarch-quickref.pdf
+          qpdf --check loongarch-quickref.pdf
+          .venv/bin/python - <<'PY'
+          import yaml
+          from pypdf import PdfReader
+
+          content = yaml.safe_load(open("content.yaml", encoding="utf-8"))
+          expected = sum(len(ch["instructions"]) for ch in content["chapters"])
+          mnemonics = {
+              insn["mnemonic"]
+              for ch in content["chapters"]
+              for insn in ch["instructions"]
+          }
+
+          reader = PdfReader("loongarch-quickref.pdf")
+
+          def leaves(items):
+              for item in items:
+                  if isinstance(item, list):
+                      yield from leaves(item)
+                  else:
+                      yield item
+
+          actual = sum(
+              1
+              for item in leaves(reader.outline)
+              if (getattr(item, "title", "").split() or [""])[0] in mnemonics
+          )
+          assert actual == expected, f"bookmarks {actual} != instructions {expected}"
+          print(f"pages={len(reader.pages)} instruction bookmarks={actual}")
+          PY
+
+      - name: Upload PDF
+        uses: actions/upload-artifact@v4
+        with:
+          name: loongarch-quickref
+          path: loongarch-quickref.pdf
+          if-no-files-found: error
+          retention-days: 14
