@@ -5,6 +5,7 @@ from __future__ import annotations
 
 import html
 import json
+import os
 import pathlib
 import re
 import subprocess
@@ -24,6 +25,7 @@ BUILD_DIR = ROOT / "build"
 HTML_PATH = BUILD_DIR / "manual.html"
 PDF_PATH = ROOT / "loongarch-quickref.pdf"
 PAGES_PATH = BUILD_DIR / "toc_pages.json"
+CHROME = os.environ.get("CHROME", "chromium")
 
 def inline(text: str) -> str:
     escaped = html.escape(text, quote=False)
@@ -255,7 +257,7 @@ def build_pdf(content: dict, pages: dict[str, int]) -> None:
     HTML_PATH.write_text(build_html(content, pages), encoding="utf-8")
     subprocess.run(
         [
-            "chromium",
+            CHROME,
             "--headless",
             "--no-sandbox",
             "--disable-gpu",

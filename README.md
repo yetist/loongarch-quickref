@@ -1,5 +1,7 @@
 # 龙芯架构指令速查表
 
+[![CI](https://github.com/yetist/loongarch-quickref/actions/workflows/ci.yml/badge.svg)](https://github.com/yetist/loongarch-quickref/actions/workflows/ci.yml)
+
 按助记符字典序排列的 LoongArch 指令速查表。A4 PDF，**137 页**，收录 **357 条**指令，覆盖 A–Z 中所有有指令的字母。
 
 **PDF：[`loongarch-quickref.pdf`](loongarch-quickref.pdf)**
@@ -14,7 +16,7 @@
 
 ## 构建
 
-需要 Python 3、Chromium、`qpdf`、`pdfinfo`（poppler）。
+需要 Python 3、Chromium、`qpdf`、`pdfinfo`（poppler）。构建脚本默认调用 `chromium`；如果使用 Google Chrome，可执行 `CHROME=google-chrome make pdf`。
 
 ```bash
 python3 -m venv .venv
@@ -51,6 +53,16 @@ make check
 - 357 条指令逐条汇编，机器码与 `encoding_value` 公式一致
 
 当前结果：**357 条、0 处不一致**。
+
+## CI
+
+GitHub Actions 工作流见 `.github/workflows/ci.yml`，在 push、pull request 和 `v*` 标签时运行：
+
+- 安装 LoongArch binutils、Chromium、qpdf、poppler 与 Noto CJK 字体
+- `make check`：校验排序、覆盖、位域与 357 条机器码
+- `make pdf`：生成 PDF
+- 校验 PDF 中的指令书签数量与 `content.yaml` 一致
+- 上传 `loongarch-quickref.pdf` artifact
 
 ## 目录结构
 

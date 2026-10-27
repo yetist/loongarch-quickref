@@ -4,14 +4,14 @@
 
   @top-right {
     content: "龙芯架构指令速查表";
-    font-family: "Source Han Sans CN", sans-serif;
+    font-family: "Source Han Sans CN", "Noto Sans CJK SC", sans-serif;
     font-size: 8pt;
     color: #777;
   }
 
   @bottom-center {
     content: counter(page) " / " counter(pages);
-    font-family: "Source Han Sans CN", sans-serif;
+    font-family: "Source Han Sans CN", "Noto Sans CJK SC", sans-serif;
     font-size: 8.4pt;
     color: #666;
   }
@@ -44,7 +44,7 @@ pre,
 .equation,
 .bit-table,
 .formula {
-  font-family: "DejaVu Sans Mono", "Source Han Sans CN", monospace;
+  font-family: "DejaVu Sans Mono", "Noto Sans Mono CJK SC", monospace;
 }
 
 /* ---------- 封面 ---------- */
@@ -59,7 +59,7 @@ pre,
 
 .cover-kicker {
   padding-top: 8mm;
-  font-family: "Source Han Sans CN", sans-serif;
+  font-family: "Source Han Sans CN", "Noto Sans CJK SC", sans-serif;
   font-size: 9.5pt;
   letter-spacing: 0.22em;
   color: #777;
@@ -71,7 +71,7 @@ pre,
 
 .cover-title {
   margin: 0;
-  font-family: "Source Han Serif CN", "Nimbus Roman", serif;
+  font-family: "Source Han Serif CN", "Noto Serif CJK SC", "Nimbus Roman", serif;
   font-size: 38pt;
   font-weight: 700;
   line-height: 1.28;
@@ -80,7 +80,7 @@ pre,
 
 .cover-subtitle {
   margin-top: 5mm;
-  font-family: "Source Han Sans CN", sans-serif;
+  font-family: "Source Han Sans CN", "Noto Sans CJK SC", sans-serif;
   font-size: 12.5pt;
   letter-spacing: 0.08em;
   color: #555;
@@ -93,7 +93,7 @@ pre,
 }
 
 .cover-meta {
-  font-family: "Source Han Sans CN", sans-serif;
+  font-family: "Source Han Sans CN", "Noto Sans CJK SC", sans-serif;
   font-size: 10pt;
   line-height: 1.9;
   color: #333;
@@ -105,7 +105,7 @@ pre,
 
 .cover-bottom {
   padding-bottom: 4mm;
-  font-family: "Source Han Sans CN", sans-serif;
+  font-family: "Source Han Sans CN", "Noto Sans CJK SC", sans-serif;
   font-size: 9pt;
   color: #777;
 }
@@ -120,7 +120,7 @@ pre,
   margin: 0 0 4mm;
   padding-bottom: 2mm;
   border-bottom: 1.6pt solid #111;
-  font-family: "Source Han Sans CN", sans-serif;
+  font-family: "Source Han Sans CN", "Noto Sans CJK SC", sans-serif;
   font-size: 18pt;
   font-weight: 700;
   letter-spacing: 0.06em;
@@ -144,7 +144,7 @@ pre,
   margin: 2mm 0 0.8mm;
   padding-bottom: 0.7mm;
   border-bottom: 0.8pt solid #333;
-  font-family: "Source Han Sans CN", sans-serif;
+  font-family: "Source Han Sans CN", "Noto Sans CJK SC", sans-serif;
   break-after: avoid;
 }
 
@@ -185,7 +185,7 @@ pre,
 .toc-page {
   width: 8mm;
   text-align: right;
-  font-family: "DejaVu Sans Mono", monospace;
+  font-family: "DejaVu Sans Mono", "Noto Sans Mono CJK SC", monospace;
   font-size: 8.3pt;
   color: #333;
 }
@@ -200,7 +200,7 @@ pre,
   margin: 0 0 3mm;
   padding-bottom: 2mm;
   border-bottom: 1.6pt solid #111;
-  font-family: "Source Han Sans CN", sans-serif;
+  font-family: "Source Han Sans CN", "Noto Sans CJK SC", sans-serif;
   font-size: 17pt;
   font-weight: 700;
   letter-spacing: 0.02em;
@@ -231,7 +231,7 @@ pre,
 
 .section-note-title {
   margin-bottom: 1mm;
-  font-family: "Source Han Sans CN", sans-serif;
+  font-family: "Source Han Sans CN", "Noto Sans CJK SC", sans-serif;
   font-size: 9.5pt;
   font-weight: 700;
 }
@@ -280,7 +280,7 @@ pre,
 }
 
 .mnemonic {
-  font-family: "Source Han Serif CN", "Nimbus Roman", serif;
+  font-family: "Source Han Serif CN", "Noto Serif CJK SC", "Nimbus Roman", serif;
   font-size: 21pt;
   font-weight: 600;
   letter-spacing: 0.01em;
@@ -329,7 +329,7 @@ pre,
 }
 
 .tag {
-  font-family: "Source Han Sans CN", sans-serif;
+  font-family: "Source Han Sans CN", "Noto Sans CJK SC", sans-serif;
   font-size: 9pt;
   color: #333;
 }
@@ -374,7 +374,7 @@ pre,
 
 .detail-label {
   padding-top: 1.1mm;
-  font-family: "Source Han Sans CN", sans-serif;
+  font-family: "Source Han Sans CN", "Noto Sans CJK SC", sans-serif;
   font-size: 8pt;
   letter-spacing: 0.06em;
   color: #666;
@@ -399,7 +399,7 @@ pre,
 .bit-table th {
   border: none;
   padding: 0 0.6mm 0.9mm;
-  font-family: "DejaVu Sans Mono", monospace;
+  font-family: "DejaVu Sans Mono", "Noto Sans Mono CJK SC", monospace;
   font-size: 6.9pt;
   font-weight: normal;
   line-height: 1;
@@ -421,7 +421,7 @@ pre,
   padding: 0;
   text-align: center;
   vertical-align: middle;
-  font-family: "DejaVu Sans Mono", monospace;
+  font-family: "DejaVu Sans Mono", "Noto Sans Mono CJK SC", monospace;
   font-size: 8.6pt;
   line-height: 1;
 }
@@ -441,7 +441,7 @@ pre,
   padding: 1.4mm 2.4mm;
   border-left: 2pt solid #c8c8c8;
   background: #f8f8f8;
-  font-family: "DejaVu Sans Mono", monospace;
+  font-family: "DejaVu Sans Mono", "Noto Sans Mono CJK SC", monospace;
   font-size: 8.2pt;
   line-height: 1.55;
   white-space: pre-wrap;
