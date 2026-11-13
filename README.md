@@ -4,7 +4,7 @@
 
 按助记符字典序排列的 LoongArch 指令速查表。A4 PDF，**137 页**，收录 **357 条**指令，覆盖 A–Z 中所有有指令的字母。
 
-**PDF：[`loongarch-quickref.pdf`](loongarch-quickref.pdf)**
+PDF 由 `make pdf` 本地构建，或在 GitHub Actions 运行结果中下载 artifact，仓库本身不再包含 PDF。
 
 ## 特点
 
@@ -74,9 +74,10 @@ GitHub Actions 工作流见 `.github/workflows/ci.yml`，在 push、pull request
 ├── style.css                # A4 版式
 ├── Makefile
 ├── requirements.txt
-├── loongarch-quickref.pdf   # 发布产物
 └── README.md
 ```
+
+`loongarch-quickref.pdf` 为构建产物，不纳入版本控制。
 
 ## 维护 `content.yaml`
 

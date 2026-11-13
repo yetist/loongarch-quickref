@@ -3,3 +3,4 @@ build/
 __pycache__/
 *.pyc
 *.pdf.tmp
+loongarch-quickref.pdf
