@@ -69,16 +69,36 @@ GitHub Actions 工作流见 `.github/workflows/ci.yml`，在 push、pull request
 
 ```text
 .
-├── content.yaml             # 唯一内容源：357 条指令
+├── content.yaml             # 卷一内容源：357 条基础指令
+├── content-vec.yaml         # 卷二内容源：1367 条向量指令（草稿生成中）
 ├── build.py                 # 生成封面/目录/正文/PDF/书签
 ├── validate.py              # 内容与编码校验
 ├── style.css                # A4 版式
 ├── Makefile
 ├── requirements.txt
+├── tools/
+│   └── extract_vector.py    # 卷二：从官方手册 PDF 半自动提取草稿
 └── README.md
 ```
 
 `loongarch-quickref.pdf` 为构建产物，不纳入版本控制。
+
+## 卷二 · 向量扩展
+
+`content-vec.yaml` 收录 LSX（128 位）与 LASX（256 位）全部 **1367 条**向量指令，按 V（LSX）/ X（LASX）两章排列。数据由 `tools/extract_vector.py` 从官方《LoongArch Reference Manual Volume II-a: Vector Instruction Extensions》附录 B 半自动提取生成：
+
+```bash
+# 重新生成草稿（需要 pdftotext，手册 PDF 放在仓库根目录）
+python3 tools/extract_vector.py LoongArchReferenceManual-*.pdf
+
+# 校验（1367 条逐条汇编比对机器码）
+make check-vec
+
+# 构建 PDF
+make pdf-vec
+```
+
+提取脚本已自动修正官方手册中的若干笔误（如 `xvmaddwod.*` 行的操作数 `xk, xj, xk` 应为 `xd, xj, xk`、`VPICKVE2GR.B` 重复标签等）。条目中的中文名称与描述为待编占位，分批校对中；25 条访存类指令手册未给出逐条伪代码，以速查级描述补写。
 
 ## 维护 `content.yaml`
 

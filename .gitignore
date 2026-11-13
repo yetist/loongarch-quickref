@@ -4,3 +4,5 @@ __pycache__/
 *.pyc
 *.pdf.tmp
 loongarch-quickref.pdf
+loongarch-quickref-vector.pdf
+LoongArchReferenceManual-*.pdf

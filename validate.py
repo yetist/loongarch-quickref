@@ -51,6 +51,8 @@ def asm_operand(op: str, insn: str) -> str:
         return "1" if op == "si16" else "0"
     if op.startswith("ui"):
         return "1"
+    if op.startswith("i") and op[1:].isdigit():
+        return "0"
     if op == "idx":
         return "0"
     if op == "sa2":
@@ -85,7 +87,7 @@ def env_for(insn: dict) -> dict[str, int]:
         "ui5": 1, "ui6": 1, "ui12": 1,
         "sa": 2, "sa2": 2, "sa3": 5, "offs": 8,
         "msbw": 15, "lsbw": 8, "msbd": 39, "lsbd": 8,
-        "idx": 0,
+        "idx": 0, "i13": 0,
     }
 
 
@@ -132,8 +134,23 @@ def main() -> None:
             mnemonic = "fcmp.ceq.s"
         elif mnemonic == "fcmp.cond.d":
             mnemonic = "fcmp.ceq.d"
+        elif ".cond." in mnemonic:
+            mnemonic = mnemonic.replace(".cond.", ".ceq.")
         lines.append(mnemonic + ((" " + ", ".join(args)) if args else ""))
-        meta.append((insn, env_for(insn)))
+        env = env_for(insn)
+        # generic immediates: siN -> 0 (si16 -> 1), uiN -> 1, iN -> 0
+        for op in operands:
+            if op in env:
+                continue
+            if op == "si16":
+                env[op] = 1
+            elif op.startswith("si") and op[2:].isdigit():
+                env[op] = 0
+            elif op.startswith("ui") and op[2:].isdigit():
+                env[op] = 1
+            elif op.startswith("i") and op[1:].isdigit():
+                env[op] = 0
+        meta.append((insn, env))
 
     source = ROOT / "build" / "validate.s"
     source.parent.mkdir(exist_ok=True)
