@@ -48,52 +48,62 @@ jobs:
           .venv/bin/pip install -r requirements.txt
 
       - name: Validate content and encodings
-        run: make check
+        run: make check check-vec
 
-      - name: Build PDF
+      - name: Build PDFs
         env:
           CHROME: google-chrome
-        run: make pdf
+        run: make pdf pdf-vec
 
-      - name: Verify PDF
+      - name: Verify PDFs
         run: |
           pdfinfo loongarch-quickref.pdf
+          pdfinfo loongarch-quickref-content-vec.pdf
           qpdf --check loongarch-quickref.pdf
+          qpdf --check loongarch-quickref-content-vec.pdf
           .venv/bin/python - <<'PY'
           import yaml
           from pypdf import PdfReader
 
-          content = yaml.safe_load(open("content.yaml", encoding="utf-8"))
-          expected = sum(len(ch["instructions"]) for ch in content["chapters"])
-          mnemonics = {
-              insn["mnemonic"]
-              for ch in content["chapters"]
-              for insn in ch["instructions"]
-          }
+          pairs = [
+              ("content.yaml", "loongarch-quickref.pdf"),
+              ("content-vec.yaml", "loongarch-quickref-content-vec.pdf"),
+          ]
 
-          reader = PdfReader("loongarch-quickref.pdf")
+          for content_file, pdf_file in pairs:
+              content = yaml.safe_load(open(content_file, encoding="utf-8"))
+              expected = sum(len(ch["instructions"]) for ch in content["chapters"])
+              mnemonics = {
+                  insn["mnemonic"]
+                  for ch in content["chapters"]
+                  for insn in ch["instructions"]
+              }
 
-          def leaves(items):
-              for item in items:
-                  if isinstance(item, list):
-                      yield from leaves(item)
-                  else:
-                      yield item
+              reader = PdfReader(pdf_file)
 
-          actual = sum(
-              1
-              for item in leaves(reader.outline)
-              if (getattr(item, "title", "").split() or [""])[0] in mnemonics
-          )
-          assert actual == expected, f"bookmarks {actual} != instructions {expected}"
-          print(f"pages={len(reader.pages)} instruction bookmarks={actual}")
+              def leaves(items):
+                  for item in items:
+                      if isinstance(item, list):
+                          yield from leaves(item)
+                      else:
+                          yield item
+
+              actual = sum(
+                  1
+                  for item in leaves(reader.outline)
+                  if (getattr(item, "title", "").split() or [""])[0] in mnemonics
+              )
+              assert actual == expected, f"{pdf_file}: bookmarks {actual} != instructions {expected}"
+              print(f"{pdf_file}: pages={len(reader.pages)} instruction bookmarks={actual}")
           PY
 
-      - name: Upload PDF
+      - name: Upload PDFs
         uses: actions/upload-artifact@v4
         with:
           name: loongarch-quickref
-          path: loongarch-quickref.pdf
+          path: |
+            loongarch-quickref.pdf
+            loongarch-quickref-content-vec.pdf
           if-no-files-found: error
           retention-days: 14
 
@@ -107,7 +117,7 @@ jobs:
       contents: write
 
     steps:
-      - name: Download PDF artifact
+      - name: Download PDF artifacts
         uses: actions/download-artifact@v4
         with:
           name: loongarch-quickref
@@ -116,5 +126,7 @@ jobs:
       - name: Create GitHub Release
         uses: softprops/action-gh-release@v2
         with:
-          files: loongarch-quickref.pdf
+          files: |
+            loongarch-quickref.pdf
+            loongarch-quickref-content-vec.pdf
           generate_release_notes: true

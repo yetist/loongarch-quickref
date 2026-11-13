@@ -59,25 +59,27 @@ make check
 GitHub Actions 工作流见 `.github/workflows/ci.yml`，在 push、pull request 和 `v*` 标签时运行：
 
 - 安装 LoongArch binutils、Chromium、qpdf、poppler 与 Noto CJK 字体
-- `make check`：校验排序、覆盖、位域与 357 条机器码
-- `make pdf`：生成 PDF
-- 校验 PDF 中的指令书签数量与 `content.yaml` 一致
-- 上传 `loongarch-quickref.pdf` artifact
-- 推送 `v*` 标签时：自动创建 GitHub Release 并附带 PDF（release 作业仅在标签推送时运行）
+- `make check` / `make check-vec`：校验排序、覆盖、位域与全部机器码（357 + 1367 条）
+- `make pdf` / `make pdf-vec`：生成两份 PDF
+- 校验两份 PDF 中的指令书签数量与内容源一致
+- 上传两份 PDF artifact
+- 推送 `v*` 标签时：自动创建 GitHub Release 并附带两份 PDF（release 作业仅在标签推送时运行）
 
 ## 目录结构
 
 ```text
 .
 ├── content.yaml             # 卷一内容源：357 条基础指令
-├── content-vec.yaml         # 卷二内容源：1367 条向量指令（草稿生成中）
-├── build.py                 # 生成封面/目录/正文/PDF/书签
-├── validate.py              # 内容与编码校验
+├── content-vec.yaml         # 卷二内容源：1367 条向量指令
+├── build.py                 # 生成封面/目录/正文/PDF/书签（--content 选择内容源）
+├── validate.py              # 内容与编码校验（--content 选择内容源）
 ├── style.css                # A4 版式
 ├── Makefile
 ├── requirements.txt
+├── manual-vol2a-issues.md   # 手册 V2-a V1.11 勘误与疑问清单（15 项）
 ├── tools/
-│   └── extract_vector.py    # 卷二：从官方手册 PDF 半自动提取草稿
+│   ├── extract_vector.py    # 卷二：从官方手册 PDF 半自动提取草稿
+│   └── fill_vector_text.py  # 卷二：填充中文名称/描述/伪代码/节注
 └── README.md
 ```
 
@@ -98,7 +100,9 @@ make check-vec
 make pdf-vec
 ```
 
-提取脚本已自动修正官方手册中的若干笔误（如 `xvmaddwod.*` 行的操作数 `xk, xj, xk` 应为 `xd, xj, xk`、`VPICKVE2GR.B` 重复标签等）。条目中的中文名称与描述为待编占位，分批校对中；25 条访存类指令手册未给出逐条伪代码，以速查级描述补写。
+产物为 `loongarch-quickref-content-vec.pdf`（与卷一 `loongarch-quickref.pdf` 并列发布）。
+
+提取脚本已自动修正官方手册中的若干笔误（如 `xvmaddwod.*` 行的操作数 `xk, xj, xk` 应为 `xd, xj, xk`、`VPICKVE2GR.B` 重复标签等）；`tools/fill_vector_text.py` 按 177 个指令家族模板填充中文名称、描述、示例注释、语义伪代码与节注，并同样修正手册伪代码中的系统性笔误（如 `XR[vd]` 应为 `XR[xd]`、`[X]VSAT.{W/D}` 循环上界等）。全部发现的手册问题汇总在 [`manual-vol2a-issues.md`](manual-vol2a-issues.md)（15 项，含笔误、正文与伪代码矛盾、遗漏与格式问题）。25 条访存类指令手册未给出逐条伪代码，以速查级描述补写。
 
 ## 维护 `content.yaml`
 
