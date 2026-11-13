@@ -1,8 +1,9 @@
 #!/usr/bin/env python3
-"""Validate content.yaml: coverage, order, encoding fields, and GNU as output."""
+"""Validate content YAML: coverage, order, encoding fields, and GNU as output."""
 
 from __future__ import annotations
 
+import argparse
 import pathlib
 import re
 import shutil
@@ -41,6 +42,8 @@ def asm_operand(op: str, insn: str) -> str:
         "fd": "$f0", "fj": "$f1", "fk": "$f2", "fa": "$f3",
         "cd": "$fcc0", "cj": "$fcc0", "ca": "$fcc0",
         "fcsr": "$fcsr0", "csr": "0x0",
+        "vd": "$vr0", "vj": "$vr1", "vk": "$vr2", "va": "$vr3",
+        "xd": "$xr0", "xj": "$xr1", "xk": "$xr2", "xa": "$xr3",
     }
     if op in regs:
         return regs[op]
@@ -48,6 +51,8 @@ def asm_operand(op: str, insn: str) -> str:
         return "1" if op == "si16" else "0"
     if op.startswith("ui"):
         return "1"
+    if op == "idx":
+        return "0"
     if op == "sa2":
         return "2"
     if op == "sa3":
@@ -71,6 +76,8 @@ def env_for(insn: dict) -> dict[str, int]:
     return {
         "rd": 4, "rj": 5, "rk": 6, "ra": 1,
         "fd": 0, "fj": 1, "fk": 2, "fa": 3,
+        "vd": 0, "vj": 1, "vk": 2, "va": 3,
+        "xd": 0, "xj": 1, "xk": 2, "xa": 3,
         "cd": 0, "cj": 0, "ca": 0,
         "fcsr": 0, "csr": 0, "cond": 4,
         "code": 0, "hint": 0, "level": 0, "seq": 0, "op": 0,
@@ -78,15 +85,25 @@ def env_for(insn: dict) -> dict[str, int]:
         "ui5": 1, "ui6": 1, "ui12": 1,
         "sa": 2, "sa2": 2, "sa3": 5, "offs": 8,
         "msbw": 15, "lsbw": 8, "msbd": 39, "lsbd": 8,
+        "idx": 0,
     }
 
 
 def main() -> None:
+    parser = argparse.ArgumentParser(description=__doc__)
+    parser.add_argument(
+        "--content",
+        type=pathlib.Path,
+        default=ROOT / "content.yaml",
+        help="content YAML file (default: content.yaml)",
+    )
+    args = parser.parse_args()
+
     for tool in (AS, OBJDUMP):
         if not shutil.which(tool):
             raise SystemExit(f"{tool} not found in PATH")
 
-    content = yaml.safe_load((ROOT / "content.yaml").read_text(encoding="utf-8"))
+    content = yaml.safe_load(args.content.resolve().read_text(encoding="utf-8"))
     chapters = content["chapters"]
     instructions = [insn for chapter in chapters for insn in chapter["instructions"]]
 

@@ -1,8 +1,9 @@
 #!/usr/bin/env python3
-"""Build the LoongArch instruction quick-reference PDF from content.yaml."""
+"""Build the LoongArch instruction quick-reference PDF from a content YAML file."""
 
 from __future__ import annotations
 
+import argparse
 import html
 import json
 import os
@@ -22,9 +23,6 @@ except ImportError as exc:  # pragma: no cover
 
 ROOT = pathlib.Path(__file__).resolve().parent
 BUILD_DIR = ROOT / "build"
-HTML_PATH = BUILD_DIR / "manual.html"
-PDF_PATH = ROOT / "loongarch-quickref.pdf"
-PAGES_PATH = BUILD_DIR / "toc_pages.json"
 CHROME = os.environ.get("CHROME", "chromium")
 
 def inline(text: str) -> str:
@@ -252,9 +250,9 @@ def build_html(content: dict, pages: dict[str, int]) -> str:
 """
 
 
-def build_pdf(content: dict, pages: dict[str, int]) -> None:
+def build_pdf(content: dict, pages: dict[str, int], html_path: pathlib.Path, pdf_path: pathlib.Path) -> None:
     BUILD_DIR.mkdir(exist_ok=True)
-    HTML_PATH.write_text(build_html(content, pages), encoding="utf-8")
+    html_path.write_text(build_html(content, pages), encoding="utf-8")
     subprocess.run(
         [
             CHROME,
@@ -264,8 +262,8 @@ def build_pdf(content: dict, pages: dict[str, int]) -> None:
             "--no-pdf-header-footer",
             "--print-to-pdf-no-header",
             "--generate-pdf-document-outline",
-            f"--print-to-pdf={PDF_PATH}",
-            HTML_PATH.as_uri(),
+            f"--print-to-pdf={pdf_path}",
+            html_path.as_uri(),
         ],
         check=True,
         capture_output=True,
@@ -336,20 +334,41 @@ def clean_outline(pdf_path: pathlib.Path, chapters: list[dict], pages: dict[str,
 
 
 def main() -> None:
-    content = yaml.safe_load((ROOT / "content.yaml").read_text(encoding="utf-8"))
+    parser = argparse.ArgumentParser(description=__doc__)
+    parser.add_argument(
+        "--content",
+        type=pathlib.Path,
+        default=ROOT / "content.yaml",
+        help="content YAML file (default: content.yaml)",
+    )
+    parser.add_argument(
+        "--pdf",
+        type=pathlib.Path,
+        default=None,
+        help="output PDF path (default: loongarch-quickref.pdf, or derived from --content)",
+    )
+    args = parser.parse_args()
+
+    content_path = args.content.resolve()
+    stem = "loongarch-quickref" if content_path.name == "content.yaml" else f"loongarch-quickref-{content_path.stem.removesuffix('-content')}"
+    pdf_path = (args.pdf or ROOT / f"{stem}.pdf").resolve()
+    html_path = BUILD_DIR / f"{stem}.html"
+    pages_path = BUILD_DIR / f"{content_path.stem}_pages.json"
+
+    content = yaml.safe_load(content_path.read_text(encoding="utf-8"))
     chapters = content["chapters"]
     pages: dict[str, int] = {}
     BUILD_DIR.mkdir(exist_ok=True)
-    if PAGES_PATH.exists():
-        pages = json.loads(PAGES_PATH.read_text(encoding="utf-8"))
+    if pages_path.exists():
+        pages = json.loads(pages_path.read_text(encoding="utf-8"))
 
     for _ in range(6):
-        build_pdf(content, pages)
-        actual = extract_outline_pages(PDF_PATH, chapters)
+        build_pdf(content, pages, html_path, pdf_path)
+        actual = extract_outline_pages(pdf_path, chapters)
         if actual == pages:
             break
         pages = actual
-        PAGES_PATH.write_text(
+        pages_path.write_text(
             json.dumps(pages, ensure_ascii=False, indent=2, sort_keys=True),
             encoding="utf-8",
         )
@@ -359,15 +378,15 @@ def main() -> None:
     if not pages:
         raise SystemExit("could not extract page numbers from the PDF outline")
     doc_title = content["document"]["title"]
-    clean_outline(PDF_PATH, chapters, pages, doc_title)
+    clean_outline(pdf_path, chapters, pages, doc_title)
 
     info = subprocess.run(
-        ["pdfinfo", str(PDF_PATH)], check=True, capture_output=True, text=True
+        ["pdfinfo", str(pdf_path)], check=True, capture_output=True, text=True
     ).stdout
     for line in info.splitlines():
         if line.startswith(("Pages:", "Page size:", "File size:")):
             print(line)
-    print(f"wrote {PDF_PATH}")
+    print(f"wrote {pdf_path}")
 
 
 if __name__ == "__main__":
