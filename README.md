@@ -100,7 +100,7 @@ make check-vec
 make pdf-vec
 ```
 
-产物为 `loongarch-quickref-content-vec.pdf`（与卷一 `loongarch-quickref.pdf` 并列发布）。
+产物为 `loongarch-quickref-vec.pdf`（与卷一 `loongarch-quickref.pdf` 并列发布）。
 
 提取脚本已自动修正官方手册中的若干笔误（如 `xvmaddwod.*` 行的操作数 `xk, xj, xk` 应为 `xd, xj, xk`、`VPICKVE2GR.B` 重复标签等）；`tools/fill_vector_text.py` 按 177 个指令家族模板填充中文名称、描述、示例注释、语义伪代码与节注，并同样修正手册伪代码中的系统性笔误（如 `XR[vd]` 应为 `XR[xd]`、`[X]VSAT.{W/D}` 循环上界等）。全部发现的手册问题汇总在 [`manual-vol2a-issues.md`](manual-vol2a-issues.md)（15 项，含笔误、正文与伪代码矛盾、遗漏与格式问题）。25 条访存类指令手册未给出逐条伪代码，以速查级描述补写。
 

@@ -350,7 +350,7 @@ def main() -> None:
     args = parser.parse_args()
 
     content_path = args.content.resolve()
-    stem = "loongarch-quickref" if content_path.name == "content.yaml" else f"loongarch-quickref-{content_path.stem.removesuffix('-content')}"
+    stem = "loongarch-quickref" if content_path.name == "content.yaml" else f"loongarch-quickref-{content_path.stem.removeprefix('content-')}"
     pdf_path = (args.pdf or ROOT / f"{stem}.pdf").resolve()
     html_path = BUILD_DIR / f"{stem}.html"
     pages_path = BUILD_DIR / f"{content_path.stem}_pages.json"

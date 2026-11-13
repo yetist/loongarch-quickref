@@ -58,16 +58,16 @@ jobs:
       - name: Verify PDFs
         run: |
           pdfinfo loongarch-quickref.pdf
-          pdfinfo loongarch-quickref-content-vec.pdf
+          pdfinfo loongarch-quickref-vec.pdf
           qpdf --check loongarch-quickref.pdf
-          qpdf --check loongarch-quickref-content-vec.pdf
+          qpdf --check loongarch-quickref-vec.pdf
           .venv/bin/python - <<'PY'
           import yaml
           from pypdf import PdfReader
 
           pairs = [
               ("content.yaml", "loongarch-quickref.pdf"),
-              ("content-vec.yaml", "loongarch-quickref-content-vec.pdf"),
+              ("content-vec.yaml", "loongarch-quickref-vec.pdf"),
           ]
 
           for content_file, pdf_file in pairs:
@@ -103,7 +103,7 @@ jobs:
           name: loongarch-quickref
           path: |
             loongarch-quickref.pdf
-            loongarch-quickref-content-vec.pdf
+            loongarch-quickref-vec.pdf
           if-no-files-found: error
           retention-days: 14
 
@@ -128,5 +128,5 @@ jobs:
         with:
           files: |
             loongarch-quickref.pdf
-            loongarch-quickref-content-vec.pdf
+            loongarch-quickref-vec.pdf
           generate_release_notes: true
