@@ -295,10 +295,10 @@ pre,
 
 .equation {
   margin-left: auto;
-  max-width: 70%;
   font-size: 7.8pt;
   line-height: 1.45;
   text-align: right;
+  white-space: nowrap;
   color: #111;
 }
 
