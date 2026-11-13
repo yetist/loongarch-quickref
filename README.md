@@ -63,6 +63,7 @@ GitHub Actions 工作流见 `.github/workflows/ci.yml`，在 push、pull request
 - `make pdf`：生成 PDF
 - 校验 PDF 中的指令书签数量与 `content.yaml` 一致
 - 上传 `loongarch-quickref.pdf` artifact
+- 推送 `v*` 标签时：自动创建 GitHub Release 并附带 PDF（release 作业仅在标签推送时运行）
 
 ## 目录结构
 
