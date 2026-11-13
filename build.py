@@ -74,11 +74,15 @@ def render_encoding(fields: list[dict]) -> str:
     for field in fields:
         high, low = field["bits"]
         span = high - low + 1
-        heads.append(
-            f'<th colspan="{span}">'
-            f'<span class="hi">{high}</span><span class="lo">{low}</span>'
-            f"</th>"
-        )
+        if span == 1:
+            # single-bit field: one centered label instead of two stacked
+            heads.append(f'<th colspan="1"><span class="solo">{high}</span></th>')
+        else:
+            heads.append(
+                f'<th colspan="{span}">'
+                f'<span class="hi">{high}</span><span class="lo">{low}</span>'
+                f"</th>"
+            )
         kind = field.get("kind", "reg")
         value = html.escape(str(field["value"]), quote=False)
         cells.append(f'<td colspan="{span}" class="{kind}">{value}</td>')

@@ -415,6 +415,11 @@ pre,
   float: right;
 }
 
+.bit-table th .solo {
+  float: none;
+  display: block;
+}
+
 .bit-table td {
   border: 0.7pt solid #222;
   height: 9.5mm;
